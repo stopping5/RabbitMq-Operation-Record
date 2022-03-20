@@ -20,8 +20,8 @@ public class NormalCustomer {
         channel.queueBind(RabbitMQConfig.DEAD_QUEUE,RabbitMQConfig.DEAD_EXCHANGE,"dead-message");
 
         channel.basicConsume(RabbitMQConfig.NORMAL_QUEUE,false,((consumerTag, message) -> {
-            System.out.println(RabbitMQConfig.NORMAL_QUEUE+"拒绝消息:"+new String(message.getBody()));
-            channel.basicReject(message.getEnvelope().getDeliveryTag(),false);
+            System.out.println(RabbitMQConfig.NORMAL_QUEUE+"接受消息:"+new String(message.getBody()));
+            channel.basicAck(message.getEnvelope().getDeliveryTag(),true);
         }),(message)->{
             System.out.println("消费失败");
         });

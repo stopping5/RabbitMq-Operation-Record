@@ -17,12 +17,13 @@ public class DeadProducer {
         Map<String, Object> arg = new HashMap<>();
         arg.put("x-dead-letter-exchange",RabbitMQConfig.DEAD_EXCHANGE);
         arg.put("x-dead-letter-routing-key","dead-message");
+        arg.put("x-max-length",6);
         rabbitMqBase.producer(
                 RabbitMQConfig.NORMAL_EXCHANGE,
                 RabbitMQConfig.NORMAL_QUEUE,
                 "normal",
                 BuiltinExchangeType.DIRECT.getType(),
                 "hello 2",
-                arg);
+                arg,10);
     }
 }

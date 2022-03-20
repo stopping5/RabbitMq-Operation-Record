@@ -13,7 +13,7 @@ public class RabbitMqBase {
     /**
      * 创建生产者
      * */
-    public void producer(String exchange, String queue, String routingKey,String type,String message, Map<String, Object> arg) throws IOException, TimeoutException {
+    public void producer(String exchange, String queue, String routingKey,String type,String message, Map<String, Object> arg,int sendCount) throws IOException, TimeoutException {
         //创建rabbitmq
         Connection connection = RabbitMqUtil.getConnection();
         //get channel
@@ -22,7 +22,10 @@ public class RabbitMqBase {
         channel.queueDeclare(queue,false,false,false,arg);
         channel.queueBind(queue,exchange,routingKey);
         //发送消息
-        channel.basicPublish(exchange,routingKey,null,message.getBytes(StandardCharsets.UTF_8));
+        for (int i = 0; i < sendCount; i++) {
+            String resultMessage = message + i;
+            channel.basicPublish(exchange,routingKey,null,resultMessage.getBytes(StandardCharsets.UTF_8));
+        }
         System.out.println("发送成功");
     }
 
