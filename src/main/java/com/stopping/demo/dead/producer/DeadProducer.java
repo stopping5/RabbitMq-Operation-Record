@@ -1,5 +1,6 @@
 package com.stopping.demo.dead.producer;
 
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.stopping.common.RabbitMQConfig;
 import com.stopping.utils.RabbitMqBase;
@@ -17,13 +18,13 @@ public class DeadProducer {
         Map<String, Object> arg = new HashMap<>();
         arg.put("x-dead-letter-exchange",RabbitMQConfig.DEAD_EXCHANGE);
         arg.put("x-dead-letter-routing-key","dead-message");
-        arg.put("x-max-length",6);
+        AMQP.BasicProperties basicProperties = new AMQP.BasicProperties().builder().expiration("10000").build();
         rabbitMqBase.producer(
                 RabbitMQConfig.NORMAL_EXCHANGE,
                 RabbitMQConfig.NORMAL_QUEUE,
                 "normal",
                 BuiltinExchangeType.DIRECT.getType(),
-                "hello 2",
-                arg,10);
+                "测试超时死信队列",
+                arg,10,basicProperties);
     }
 }
