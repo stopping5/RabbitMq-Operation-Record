@@ -1,0 +1,10 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: rabbit-consumer
+  rabbitmq:
+    host: 120.24.242.44
+    port: 34566
+    username: stopping
+    password: xdp123456
