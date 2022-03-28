@@ -1,5 +1,6 @@
 package com.stopping.demo.queue;
 
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
 import com.stopping.common.RabbitMQConfig;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * 队列参数操作
@@ -25,8 +27,14 @@ public class ArgDemo {
 
     private static final String LIMIT_EXCHANGE = "limit-exchange";
 
+    private static final String PRIORITY_QUEUE = "priority-queue";
+
+    private static final String PRIORITY_EXCHANGE = "priority-exchange";
+
+    private static final String PRIORITY_KEY = "priority-key";
+
     public static void main(String[] args) throws IOException {
-        queueLimit();
+        queuePriority();
     }
 
     /**
@@ -67,5 +75,28 @@ public class ArgDemo {
             channel.basicPublish(LIMIT_EXCHANGE,"limit",null,msg.toString().getBytes(StandardCharsets.UTF_8));
         }
         System.out.println("hello 已发送");
+    }
+
+
+    /**
+     * 队列消息优先级
+     * */
+    public static void queuePriority() throws IOException {
+        Connection connection = RabbitMqUtil.getConnection();
+        Channel channel = connection.createChannel();
+        Map<String, Object> args = new HashMap<String, Object>();
+        //队列开启优先级 最大优先级10
+        args.put("x-max-priority", 10);
+        channel.queueDeclare(PRIORITY_QUEUE,false,false,false,args);
+        channel.exchangeDeclare(PRIORITY_EXCHANGE, BuiltinExchangeType.DIRECT);
+        channel.queueBind(PRIORITY_QUEUE,PRIORITY_EXCHANGE,PRIORITY_KEY);
+        Random random = new Random(1);
+        for (int i = 0; i < 5; i++) {
+            int priority = random.nextInt(10);
+            String msg = "顺序："+i+"hello"+priority;
+            AMQP.BasicProperties p = new AMQP.BasicProperties().builder().priority(priority).build();
+            channel.basicPublish(PRIORITY_EXCHANGE,PRIORITY_KEY,p,msg.getBytes(StandardCharsets.UTF_8));
+            System.out.println(msg);
+        }
     }
 }
