@@ -1,6 +1,6 @@
 package com.stopping.controller;
 
-import com.stopping.service.SendMessageServiceImpl;
+import com.stopping.service.AdvanceConfirmServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,11 +13,11 @@ import javax.annotation.Resource;
 public class SendMessageController {
 
     @Resource
-    private SendMessageServiceImpl sendMessageService;
+    private AdvanceConfirmServiceImpl advanceConfirmService;
 
-    @GetMapping("/{msg}")
-    public String sendMsg(@PathVariable("msg")String msg){
-        sendMessageService.send(msg);
+    @GetMapping("/advance/{msg}")
+    public String sendAdvanceMsg(@PathVariable("msg")String msg){
+        advanceConfirmService.send(msg);
         return "发送完成";
     }
 }

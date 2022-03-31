@@ -8,3 +8,4 @@ spring:
     port: 34566
     username: stopping
     password: xdp123456
+    publisher-confirm-type: correlated
