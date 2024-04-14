@@ -4,8 +4,8 @@ spring:
   application:
     name: rabbit-consumer
   rabbitmq:
-    host: 120.24.242.44
-    port: 34566
-    username: stopping
-    password: xdp123456
+    host: 127.0.0.1
+    port: 5672
+    username: admin
+    password: admin
     publisher-confirm-type: correlated

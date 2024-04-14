@@ -12,7 +12,8 @@ public class AdvanceCustomer {
     private String ADVANCE_QUEUE = "advance_queue";
 
     @RabbitListener(queues = "advance_queue")
-    public void receive(Message message){
+    public void receive(Message message) throws InterruptedException {
+        Thread.sleep(3000);
         String msg = new String(message.getBody());
         log.info("接收消息:{}",msg);
     }
